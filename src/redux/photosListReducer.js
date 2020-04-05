@@ -28,11 +28,17 @@ export const getPhotosList = () => async (dispatch) => {
   photosAPI
     .getPhotosListRequest()
     .then((response) => {
-      return response.json();
+      if (response.ok === true) {
+        console.log(response);
+        return response.json();
+      }
+      console.log(`Error. Status code: ${response.status}`);
     })
     .then((data) => {
+      console.log(data);
       dispatch(setPhotosList(data));
-    });
+    })
+    .catch((err) => console.log(err));
 };
 
 export default appReducer;

@@ -1,9 +1,9 @@
 import React from 'react';
-import MainScreen from './components/MainScreen';
-import FullScreenView from './components/FullScreenView';
+import MainScreen from './src/components/MainScreen';
+import FullScreenView from './src/components/FullScreenView';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
-import withContext from './components/HOC/withContext';
+import withContext from './src/components/HOC/withContext';
 
 const App = () => {
   const Stack = createStackNavigator();
