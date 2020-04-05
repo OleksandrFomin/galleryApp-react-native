@@ -29,13 +29,11 @@ export const getPhotosList = () => async (dispatch) => {
     .getPhotosListRequest()
     .then((response) => {
       if (response.ok === true) {
-        console.log(response);
         return response.json();
       }
       console.log(`Error. Status code: ${response.status}`);
     })
     .then((data) => {
-      console.log(data);
       dispatch(setPhotosList(data));
     })
     .catch((err) => console.log(err));
