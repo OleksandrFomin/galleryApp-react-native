@@ -1,9 +1,11 @@
 import photosAPI from '../components/API/api';
 
 const SET_PHOTOS_LIST = 'SET_PHOTOS_LIST';
+const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING';
 
 let initialState = {
   photos: [],
+  isFetching: true,
 };
 
 const appReducer = (state = initialState, action) => {
@@ -12,6 +14,7 @@ const appReducer = (state = initialState, action) => {
       return {
         ...state,
         photos: [...action.photos],
+        isFetching: action.isFetching,
       };
 
     default:
@@ -24,7 +27,13 @@ export const setPhotosList = (photos) => ({
   photos,
 });
 
-export const getPhotosList = () => async (dispatch) => {
+export const toggleIsFetching = (isFetching) => ({
+  type: TOGGLE_IS_FETCHING,
+  isFetching,
+});
+
+export const getPhotosList = () => (dispatch) => {
+  dispatch(toggleIsFetching(true));
   photosAPI
     .getPhotosListRequest()
     .then((response) => {
@@ -34,6 +43,7 @@ export const getPhotosList = () => async (dispatch) => {
       console.log(`Error. Status code: ${response.status}`);
     })
     .then((data) => {
+      dispatch(toggleIsFetching(true));
       dispatch(setPhotosList(data));
     })
     .catch((err) => console.log(err));

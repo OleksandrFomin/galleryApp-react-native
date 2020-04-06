@@ -1,19 +1,18 @@
 import React from 'react';
-import MainScreen from './src/components/MainScreen';
-import FullScreenView from './src/components/FullScreenView';
-import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import withContext from './src/components/HOC/withContext';
+import HomeStack from './src/components/HomeScreen/HomeStack';
 
 const App = () => {
-  const Stack = createStackNavigator();
+  const Tab = createBottomTabNavigator();
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="MainScreen">
-        <Stack.Screen name="Main Screen" component={MainScreen} />
-        <Stack.Screen name="Full Screen View" component={FullScreenView} />
-      </Stack.Navigator>
+      <Tab.Navigator initialRouteName="Home Stack">
+        <Tab.Screen name="Home Stack" component={HomeStack} />
+        <Tab.Screen name="Full Screen View" component={HomeStack} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 };
