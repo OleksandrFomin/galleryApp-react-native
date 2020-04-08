@@ -29,10 +29,6 @@ const SearchScreen = ({
     setNextPage();
   };
 
-  const clearPreviousSearchHandler = () => {
-    clearPreviousSearch();
-  };
-
   return (
     <PhotosGrid
       photos={photosList}
@@ -40,7 +36,6 @@ const SearchScreen = ({
       navigation={navigation}
       setQueryString={setQueryStringHandler}
       setNextPage={setNextPageHandler}
-      clearPreviousSearch={clearPreviousSearchHandler}
     />
   );
 };

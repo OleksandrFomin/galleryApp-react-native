@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
 import {connect} from 'react-redux';
 import {getPhotosList, setNextPage} from '../../redux/randomPhotosReducer';
-import {getRandomPhotosSelector} from '../Selectors/photosSelector';
 import PhotosGrid from '../Common/PhotosGrid';
+import Preloader from '../Common/Preloader';
 
 const HomeScreen = ({
   photosList,
@@ -20,18 +20,26 @@ const HomeScreen = ({
     setNextPage();
   };
 
+  photosList.length;
+
   return (
-    <PhotosGrid
-      photos={photosList}
-      setNextPage={setNextPageHandler}
-      isFetching={isFetching}
-      navigation={navigation}
-    />
+    <>
+      {photosList.length ? (
+        <PhotosGrid
+          photos={photosList}
+          setNextPage={setNextPageHandler}
+          isFetching={isFetching}
+          navigation={navigation}
+        />
+      ) : (
+        <Preloader />
+      )}
+    </>
   );
 };
 
 const mapStateToProps = (state) => ({
-  photosList: getRandomPhotosSelector(state),
+  photosList: state.randomPhotos.photosList,
   currentPage: state.randomPhotos.currentPage,
   isFetching: state.randomPhotos.isFetching,
 });

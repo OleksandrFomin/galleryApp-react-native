@@ -1,5 +1,12 @@
 import React from 'react';
-import {TextInput, View, Button, StyleSheet, Dimensions} from 'react-native';
+import {
+  TextInput,
+  View,
+  Button,
+  StyleSheet,
+  Dimensions,
+  Keyboard,
+} from 'react-native';
 import {connect} from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
@@ -31,6 +38,7 @@ const Searchbar = ({
         onPress={() => {
           clearPreviousSearch();
           getSearchedPhotos(queryString, currentPage);
+          Keyboard.dismiss();
         }}
         title="Search"
       />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import {
   StyleSheet,
   FlatList,
@@ -7,13 +7,24 @@ import {
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
-import Center from './Center';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const PhotosGrid = (props) => {
+  const flatListRef = useRef();
+
+  const scrollToTop = () => {
+    flatListRef.current.scrollToOffset({animated: true, offset: 0});
+  };
+
+  const [isScrolled, setIsScrolled] = useState(false);
+
   return (
     <>
       <FlatList
+        ref={flatListRef}
         contentContainerStyle={styles.photosContainer}
+        onMomentumScrollBegin={() => setIsScrolled(true)}
+        scrollsToTop={() => setIsScrolled(false)}
         numColumns={imagesPerRow}
         data={props.photos}
         scrollEnabled={!props.isFetching}
@@ -38,6 +49,17 @@ const PhotosGrid = (props) => {
           </TouchableOpacity>
         )}
       />
+      {isScrolled ? (
+        <TouchableOpacity onPress={scrollToTop} style={styles.scrollToTopBtn}>
+          <Icon
+            name="keyboard-arrow-up"
+            color="black"
+            size={30}
+            styles={styles.scrollToTopArrow}
+          />
+        </TouchableOpacity>
+      ) : null}
+
       {props.isFetching ? (
         <ActivityIndicator
           size="large"
@@ -62,6 +84,16 @@ const styles = StyleSheet.create({
     height: calculatedSize(),
     width: calculatedSize(),
   },
+
+  scrollToTopBtn: {
+    position: 'absolute',
+    right: 10,
+    bottom: 20,
+    backgroundColor: 'rgba(255,255,255, 0.7)',
+    padding: 10,
+    borderRadius: 50,
+  },
+
   preloader: {
     position: 'absolute',
     left: '45%',
