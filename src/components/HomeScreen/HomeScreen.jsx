@@ -1,74 +1,41 @@
 import React, {useEffect} from 'react';
-import {
-  StyleSheet,
-  FlatList,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  ActivityIndicator,
-  View,
-} from 'react-native';
 import {connect} from 'react-redux';
-import {getPhotosList} from '../../redux/photosListReducer';
-import Center from '../Common/Center';
+import {getPhotosList, setNextPage} from '../../redux/randomPhotosReducer';
+import {getRandomPhotosSelector} from '../Selectors/photosSelector';
+import PhotosGrid from '../Common/PhotosGrid';
 
-const HomeScreen = ({photosList, getPhotosList, isFetching, navigation}) => {
+const HomeScreen = ({
+  photosList,
+  getPhotosList,
+  setNextPage,
+  currentPage,
+  isFetching,
+  navigation,
+}) => {
   useEffect(() => {
-    getPhotosList();
-  }, []);
+    getPhotosList(currentPage);
+  }, [currentPage]);
+
+  const setNextPageHandler = () => {
+    setNextPage();
+  };
 
   return (
-    <>
-      {isFetching ? (
-        <Center>
-          <ActivityIndicator size="large" />
-        </Center>
-      ) : (
-        <FlatList
-          numColumns={imagesPerRow}
-          key={imagesPerRow}
-          data={photosList}
-          contentContainerStyle={styles.photosContainer}
-          renderItem={({item}) => (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('Full Screen View', {
-                  photoUrl: item.urls.regular,
-                  name: item.alt_description,
-                  instagram: item.user.instagram_username,
-                })
-              }
-              keyExtractor={item.id}>
-              <Image
-                source={{uri: `${item.urls.small}`}}
-                style={styles.imgItemSmall}
-              />
-            </TouchableOpacity>
-          )}
-        />
-      )}
-    </>
+    <PhotosGrid
+      photos={photosList}
+      setNextPage={setNextPageHandler}
+      isFetching={isFetching}
+      navigation={navigation}
+    />
   );
 };
 
 const mapStateToProps = (state) => ({
-  photosList: state.photosList.photos,
-  isFetching: state.photosList.isFetching,
+  photosList: getRandomPhotosSelector(state),
+  currentPage: state.randomPhotos.currentPage,
+  isFetching: state.randomPhotos.isFetching,
 });
 
-const windowWidth = Dimensions.get('window').width;
-let imagesPerRow = 3;
-
-const calculatedSize = () => {
-  let size = windowWidth / imagesPerRow;
-  return size;
-};
-
-const styles = StyleSheet.create({
-  imgItemSmall: {
-    height: calculatedSize(),
-    width: calculatedSize(),
-  },
-});
-
-export default connect(mapStateToProps, {getPhotosList})(HomeScreen);
+export default connect(mapStateToProps, {getPhotosList, setNextPage})(
+  HomeScreen,
+);

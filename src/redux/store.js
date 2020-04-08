@@ -1,9 +1,11 @@
 import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
-import photosListReducer from './photosListReducer';
+import randomPhotosReducer from './randomPhotosReducer';
+import searchedPhotosReducer from './searchedPhotosReducer';
 import thunkMiddleware from 'redux-thunk';
 
 let reducers = combineReducers({
-  photosList: photosListReducer,
+  randomPhotos: randomPhotosReducer,
+  searchedPhotos: searchedPhotosReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

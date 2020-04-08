@@ -2,18 +2,31 @@ import photosAPI from '../components/API/api';
 
 const SET_PHOTOS_LIST = 'SET_PHOTOS_LIST';
 const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING';
+const SET_NEXT_PAGE = 'SET_NEXT_PAGE';
 
 let initialState = {
-  photos: [],
-  isFetching: true,
+  photosList: [],
+  currentPage: 1,
+  isFetching: false,
 };
 
-const appReducer = (state = initialState, action) => {
+const randomPhotosReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_PHOTOS_LIST:
       return {
         ...state,
-        photos: [...action.photos],
+        photosList: [...state.photosList, ...action.photosList],
+      };
+
+    case SET_NEXT_PAGE:
+      return {
+        ...state,
+        currentPage: state.currentPage + 1,
+      };
+
+    case TOGGLE_IS_FETCHING:
+      return {
+        ...state,
         isFetching: action.isFetching,
       };
 
@@ -22,9 +35,13 @@ const appReducer = (state = initialState, action) => {
   }
 };
 
-export const setPhotosList = (photos) => ({
+export const setPhotosList = (photosList) => ({
   type: SET_PHOTOS_LIST,
-  photos,
+  photosList,
+});
+
+export const setNextPage = () => ({
+  type: SET_NEXT_PAGE,
 });
 
 export const toggleIsFetching = (isFetching) => ({
@@ -32,10 +49,10 @@ export const toggleIsFetching = (isFetching) => ({
   isFetching,
 });
 
-export const getPhotosList = () => (dispatch) => {
+export const getPhotosList = (pageNum) => (dispatch) => {
   dispatch(toggleIsFetching(true));
   photosAPI
-    .getPhotosListRequest()
+    .getPhotosListRequest(pageNum)
     .then((response) => {
       if (response.ok === true) {
         return response.json();
@@ -43,10 +60,10 @@ export const getPhotosList = () => (dispatch) => {
       console.log(`Error. Status code: ${response.status}`);
     })
     .then((data) => {
-      dispatch(toggleIsFetching(true));
+      dispatch(toggleIsFetching(false));
       dispatch(setPhotosList(data));
     })
     .catch((err) => console.log(err));
 };
 
-export default appReducer;
+export default randomPhotosReducer;
